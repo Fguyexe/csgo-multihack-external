@@ -5,31 +5,25 @@ using System.Threading;
 using System.Diagnostics;
 using System.IO;
 using System.Drawing;
-using System.Windows;
 using PewPew.math;
-using System.Windows;
 using System.Media;
-using System.Linq;
-using System.ComponentModel;
-using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 
-using System.ComponentModel;
+
 
 namespace SprayExternal
 {
     public partial class Form1 : Form
     {
+        
 
-
-
+        
 
         public static int ShotsFired = 0;
         static Vector3 Angle;
         static Vector3 AimPunch;
         static Vector3 OldAngle;
         static IntPtr ClientDll, EngineDll;
-        static IntPtr ServerDll;
         static IntPtr ClientState, LocalPlayer;
 
         public static string proccess = "csgo";
@@ -55,10 +49,12 @@ namespace SprayExternal
         public static bool? NoHands = false;
         public static bool? AimbotBool = false;
         public static bool? HitShoud = false;
+        public static bool lockonteam = false;
+        
 
         public static VAMemory vam = new VAMemory(proccess);
 
-
+        
         public static float r = 255, g, b;
         public static float r2, g2, b2 = 255;
         public static byte r3 = 255, g3, b3;
@@ -87,6 +83,7 @@ namespace SprayExternal
         public static int LockType = 0;
         public static int mov, movX, movY;
         public static bool visible = true;
+
 
         public FormWindowState windowState { get; set; }
         public Form1()
@@ -129,187 +126,25 @@ namespace SprayExternal
             if (GetModuleAddy())
             {
 
-                
 
+                Offsets.Activateoffsets();
 
                 Memory.Initialize("csgo");
+             
 
                 key = Convert.ToInt32(textBox2.Text);
-                var path2 = Path.Combine(Directory.GetCurrentDirectory(), @"Offsets.txt");
-                string[] lines = File.ReadAllLines(path2);
-
-                int z = 0;
-                // Offset grabber
-                foreach (string line in lines)
-                {
-                    z++;
-                    if (z == 2)
-                    {
-                        Offsets.LocalPlayer = Convert.ToInt32(line, 16);
-                        Console.Beep();
-                    }
-                    if (z == 4)
-                    {
-                        Offsets.Team = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 6)
-                    {
-                        Offsets.EntityList = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 8)
-                    {
-                        Offsets.Dormant = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 10)
-                    {
-                        Offsets.GlowIndex = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 12)
-                    {
-                        Offsets.GlowObject = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 14)
-                    {
-                        Offsets.Health = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 16)
-                    {
-                        Offsets.CrossHairId = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 18)
-                    {
-
-                        Offsets.Attack = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 20)
-                    {
-
-                        Offsets.flag = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 22)
-                    {
-
-                        Offsets.forceJump = Convert.ToInt32(line, 16);
-
-
-                    }
-                    if (z == 24)
-                    {
-                        Offsets.FOV = Convert.ToInt32(line, 16);
-
-                    }
-                    if (z == 26)
-                    {
-                        Offsets.ISscoped = Convert.ToInt32(line, 16);
-
-                    }
-                    if (z == 28)
-                    {
-                        Offsets.clientstate = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 30)
-                    {
-                        Offsets.ViewAngles = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 32)
-                    {
-                        Offsets.ShotsFired = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 34)
-                    {
-                        Offsets.aimPunchAngle = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 36)
-                    {
-                        Offsets.viewpunchangle = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 38)
-                    {
-                        Offsets.FlashDuration = Convert.ToInt32(line, 16);
-
-                    }
-                    if (z == 40)
-                    {
-                        Offsets.Spotted = Convert.ToInt32(line, 16);
-
-                    }
-                    if (z == 42)
-                    {
-                        Offsets.MyWeapons = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 44)
-                    {
-                        Offsets.ItemDefinitionIndex = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 46)
-                    {
-                        Offsets.FallBackPaintKit = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 48)
-                    {
-                        Offsets.FallBackSeed = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 50)
-                    {
-                        Offsets.FallBackWear = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 52)
-                    {
-                        Offsets.FallBackStatTrak = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 54)
-                    {
-                        Offsets.CustomName = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 56)
-                    {
-                        Offsets.ItemIDHigh = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 58)
-                    {
-                        Offsets.AccountID = Convert.ToInt32(line, 16);
-                        
-                    }
-                    if (z == 60)
-                    {
-                        Offsets.OrifinalOwnerLow = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 62)
-                    {
-                        Offsets.VecOrgin = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 64)
-                    {
-                        Offsets.VecViewOffset = Convert.ToInt32(line, 16); ;
-                    }
-                    if (z == 66)
-                    {
-                        Offsets.BoneMatrix = Convert.ToInt32(line, 16);
-                        
-                    }
-                    if (z == 68)
-                    {
-                        Offsets.ModelIndex = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 70)
-                    {
-                        Offsets.DeltaTics = Convert.ToInt32(line, 16);
-                    }
-                    if (z == 72)
-                    {
-                        Offsets.HitsOnServer = Convert.ToInt32(line, 16);
-                        Console.Beep();
-                    }
+               
 
                     fAttack = bClient + Offsets.Attack;
                     //intptr dlls
                     ClientDll = Memory.GetModuleBaseAddress("client.dll");
 
                     EngineDll = Memory.GetModuleBaseAddress("engine.dll");
-                    ServerDll = Memory.GetModuleBaseAddress("server.dll");
-
-                  
                     
+
+
+
+
                 }
 
 
@@ -432,7 +267,7 @@ namespace SprayExternal
                     }
                 }
             }
-        }
+        
    
 
 
@@ -454,9 +289,7 @@ namespace SprayExternal
                   
                    
                     player.Play();
-                    player.Play();
-                    player.Play();
-
+                    
                 }
                 
                 if (HitShoud == false)
@@ -497,6 +330,7 @@ namespace SprayExternal
                     {
                         break;
                     }
+                    
                 }
 
             }
@@ -557,9 +391,7 @@ namespace SprayExternal
                 Vector3 EyePosition = Memory.Read<Vector3>(LocalPlaye2 + Offsets.VecViewOffset);
                 Vector3 orgin = Memory.Read<Vector3>(LocalPlaye2 + Offsets.VecOrgin);
                 Vector3 idk = orgin + EyePosition;
-                Vector3 EyePosition2 = Memory.Read<Vector3>(EntityList + Offsets.VecViewOffset);
-                Vector3 orgin2 = Memory.Read<Vector3>(EntityList + Offsets.VecOrgin);
-                Vector3 idk2 = orgin2 + EyePosition2;
+               
 
 
 
@@ -575,30 +407,36 @@ namespace SprayExternal
 
                 if (Memory.Read<Int32>((IntPtr)EntityList + Offsets.Health) < 1)
                     continue;
-
-                if (MyTeam == Team)
-                    continue;
+                if (lockonteam == false)
+                {
+                    if (MyTeam == Team)
+                        continue;
+                }
+               
                 if (Memory.Read<Boolean>((IntPtr)EntityList + Offsets.Dormant))
                     continue;
                 angles Aimat = CalcAngle(idk, BonePos);
-               
+                
 
-                
-                    
-                
+
+
+
+
 
 
                 float fovAimY = Aimat.Y - viewangle.Y;
                 float FovaimX = Aimat.X = viewangle.X;
+
                 if (fovAimY > 180) fovAimY -= 360;
                 if (fovAimY < -180) fovAimY += 360;
                 if (FovaimX > 89.0f) FovaimX = 88.0f;
                 if (FovaimX < -89.0f) FovaimX = -88.0f;
+
               float  fovAim2y = Math.Abs(fovAimY);
                 float fovaim2X = Math.Abs(FovaimX);
                 if (LockType == 0)
                 {
-                    dist = GetDistance(idk, BonePos);
+                    dist = GetDistance(BonePos, orgin);
                 }
                 else
                 {
@@ -626,26 +464,30 @@ namespace SprayExternal
             return curBest;
             
         }
+        
+        
         static angles CalcAngle(Vector3 src, Vector3 dst)
             {
                 angles angles;
                 double[] delta = { (src.X - dst.X), (src.Y - dst.Y), (src.Z - dst.Z) };
             double hyp = Math.Sqrt(delta[0] * delta[0] + delta[1] * delta[1]);
-            angles.X = (float)(Math.Asin(delta[2] / hyp) * 57.295779513082f);
-            angles.Y = (float)(Math.Atan(delta[1] / delta[0]) * 57.295779513082f);
+            angles.X = (float)(Math.Asin(delta[2] / hyp) * (180.0f / Math.PI));
+            angles.Y = (float)(Math.Atan(delta[1] / delta[0]) * (180.0f / Math.PI));
+            
             if (delta[0] >= 0.0)
                 angles.Y += 180.0f;
 
             return angles;
-        }
+        } 
         
         //Threads
         private void aimbotVoid()
         {
             key = 81;
-            
+            Thread.Sleep(10);
             while (true)
             {
+                
                 if (AimbotBool == false)
                     break;
                 this.Invoke(new Action(() => { fovv.Text = Convert.ToString(hScrollBar2.Value); }));
@@ -658,7 +500,7 @@ namespace SprayExternal
                 {
                     ;
                 }
-                Thread.Sleep(10);
+                
                 if (GetAsyncKeyState(key) != aimbotkey)
                 {
 
@@ -676,8 +518,9 @@ namespace SprayExternal
                         }
                             closest = BestEntiy();
                     Thread.Sleep(10);
-                    if (closest == 0)
-                        continue;
+                    
+                    
+                    
                         
                         IntPtr LocalPlaye2 = Memory.Read<IntPtr>(ClientDll + Offsets.LocalPlayer);
 
@@ -696,8 +539,7 @@ namespace SprayExternal
                         if (Memory.Read<Int32>((IntPtr)EntityList + Offsets.Health) < 1)
                             continue;
                        
-                        if (EntityList == IntPtr.Zero)
-                            continue;
+                        
                        
                         angles Aimat = CalcAngle(idk, BonePos);
                         if (Smooth != 0 && Smooth != 1)
@@ -1149,6 +991,7 @@ namespace SprayExternal
                             vam.WriteByte((IntPtr)EntityList + 0x70, r3);
                             vam.WriteByte((IntPtr)EntityList + 0x71, g3);
                             vam.WriteByte((IntPtr)EntityList + 0x72, b3);
+                            
                             int thisPtr = (int)(EngineDll + 0x59205C - 0x2c);
                             byte[] bytearray = BitConverter.GetBytes(brightness);
                             int intbrightness = BitConverter.ToInt32(bytearray, 0);
@@ -1301,7 +1144,7 @@ namespace SprayExternal
                             current = GlowObject + calculations;
                             vam.WriteBoolean((IntPtr)current, Team.rwo);
 
-                           
+
 
 
 
@@ -1333,8 +1176,9 @@ namespace SprayExternal
                             current = GlowObject + calculations;
                             vam.WriteBoolean((IntPtr)current, Enemy.rwo);
 
-                           
 
+
+                            
 
 
                         }
@@ -1629,48 +1473,7 @@ namespace SprayExternal
            
 
         }
-        public class Offsets
-        {
-            
-            public static int LocalPlayer;
-            public static int Team;
-            public static int EntityList;
-            public static int Dormant;
-            public static int GlowIndex;
-            public static int GlowObject;
-            public static int Health;
-            public static int CrossHairId;
-            public static int Attack;
-            public static int flag;
-            public static int forceJump;
-            public static int FOV;
-            public static int ISscoped;
-            public static int clientstate;
-            public static int ViewAngles;
-            public static int ShotsFired;
-            public static int aimPunchAngle;
-            public static int viewpunchangle;
-            public static int FlashDuration;
-            public static int Spotted;
-            public static int MyWeapons;
-            public static int ItemDefinitionIndex;
-            public static int FallBackPaintKit;
-            public static int FallBackSeed;
-            public static int FallBackWear;
-            public static int FallBackStatTrak;
-            public static int CustomName;
-            public static int ItemIDHigh;
-            public static int AccountID;
-            public static int OrifinalOwnerLow;
-            public static int VecOrgin;
-            public static int VecViewOffset;
-            public static int BoneMatrix;
-            public static int ModelIndex;
-            public static int DeltaTics;
-            public static int HitsOnServer;
-
-
-        }
+        
         public class SkinIds
         {
             public static int Cz75skin;
@@ -2251,6 +2054,7 @@ namespace SprayExternal
                 hScrollBar2.Show();
                 hScrollBar3.Show();
                 label65.Show();
+                checkBox16.Show();
 
 
 
@@ -2273,6 +2077,7 @@ namespace SprayExternal
                 hScrollBar3.Hide();
                 comboBox3.Hide();
                 label62.Hide();
+                checkBox16.Hide();
             }
         }
 
@@ -2367,7 +2172,7 @@ namespace SprayExternal
 
         private void hScrollBar2_Scroll(object sender, ScrollEventArgs e)
         {
-            AimbotFov = hScrollBar1.Value;
+            AimbotFov = hScrollBar2.Value;
         }
 
         private void hScrollBar3_Scroll(object sender, ScrollEventArgs e)
@@ -2436,7 +2241,7 @@ namespace SprayExternal
         {
 
                     Graphics mgraphics = e.Graphics;
-                    Pen pen = new Pen(Color.FromArgb(20, 20, 20), 1);
+                    Pen pen = new Pen(Color.FromArgb(0, 0, 0), 1);
                     Rectangle area = new Rectangle(0, 0, this.Width - 1, this.Height - 1);
                     LinearGradientBrush lgb = new LinearGradientBrush(area, Color.FromArgb(60, 60, 60), Color.FromArgb(20, 20, 20), LinearGradientMode.Vertical);
                     mgraphics.FillRectangle(lgb, area);
@@ -2451,6 +2256,23 @@ namespace SprayExternal
             {
                 this.Refresh();
             }
+        }
+
+        private void checkBox16_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox16.Checked)
+            {
+                lockonteam = true;
+            }
+            else
+            {
+                lockonteam = false;
+            }
+        }
+
+        private void label64_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void panel6_MouseMove(object sender, MouseEventArgs e)
